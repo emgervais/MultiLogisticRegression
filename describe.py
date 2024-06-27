@@ -25,8 +25,7 @@ def sort(array):
 def parse(content):
     lines = content.strip().split('\n')
     array = [line.split(',') for line in lines]
-    i = 0
-    while i < len(array[0]):
+    for i in range(len(array[0])):
         empty_count = 0
         remove_column = False
         temp_array = [array[0][i]]
@@ -40,7 +39,6 @@ def parse(content):
                 temp_array.append(float(element[i]))
         if not remove_column and empty_count != len(array) - 1:
             columns.append(temp_array)
-        i += 1
 
 def printFeature(_):
     line = "".ljust(10)
