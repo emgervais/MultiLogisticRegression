@@ -1,14 +1,11 @@
 import sys
 import math
 spacing = 30
-mean = []
-count = []
-columns = []
 def getData(name):
     # name = 'datasets/test.csv'
     with open(name, 'r') as file:
         file_contents = file.read()
-    parse(file_contents)
+    return parse(file_contents)
 
 def removeColumn(index, array):
     for sub_array in array:
@@ -25,6 +22,8 @@ def sort(array):
 def parse(content):
     lines = content.strip().split('\n')
     array = [line.split(',') for line in lines]
+    removeColumn(0, array)
+    numerical_columns = []
     for i in range(len(array[0])):
         empty_count = 0
         remove_column = False
@@ -34,19 +33,12 @@ def parse(content):
                 empty_count += 1
             elif not isNum(element[i]):
                 remove_column = True
-                break
             else:
                 temp_array.append(float(element[i]))
         if not remove_column and empty_count != len(array) - 1:
-            columns.append(temp_array)
+            numerical_columns.append(temp_array)
+    return numerical_columns, array
 
-def printFeature(_):
-    line = "".ljust(10)
-    for feature in columns:
-        line += feature[0].ljust(spacing)
-        feature.pop(0)
-        feature = sort(feature)
-    return line
 
 
 def isNum(element):
@@ -56,72 +48,94 @@ def isNum(element):
         return False
     return True
 
-def printCount(line):
-    for i in range(len(columns)):
-        count.append(len(columns[i]))
-        line += str(f"{count[i]:.6f}").ljust(spacing)
+def printFeature(numerical_columns, _):
+    line = "".ljust(10)
+    for feature in numerical_columns:
+        line += feature[0].ljust(spacing)
+        feature.pop(0)
+        feature = sort(feature)
     return line
 
-def printMean(line):
-    for i in range(len(columns)):
-        total = float(0)
-        for element in columns[i]:
+def calculateCount(data):
+    c = 0
+    for element in data:
+        if (element):
+            c += 1
+    return c
+
+def printCount(numerical_columns, line):
+    for data in numerical_columns:
+        line += str(f"{calculateCount(data):.6f}").ljust(spacing)
+    return line
+
+def calculateMean(data):
+    total = float(0)
+    for element in data:
+        if(element):
             total += element
-        mean.append(total / count[i])
-        line += str(f"{total / count[i]:.6f}").ljust(spacing)
+    return total / calculateCount(data)
+
+def printMean(numerical_columns, line):
+    for data in numerical_columns:
+        result = calculateMean(data)
+        line += str(f"{result:.6f}").ljust(spacing)
     return line
 
-def printStd(line):
-    for i in range(len(columns)):
-        total = float(0)
-        for element in columns[i]:
-            total += pow(mean[i] - element, 2)
-        line += str(f"{math.sqrt(total / count[i]):.6f}").ljust(spacing)
+def calculateStd(data):
+    total = float(0)
+    for element in data:
+        if(element):
+            total += pow(calculateMean(data) - element, 2)
+    return math.sqrt(total / calculateCount(data))
+
+def printStd(numerical_columns, line):
+    for data in numerical_columns:
+        line += str(f"{calculateStd(data):.6f}").ljust(spacing)
     return line
 
-def printMin(line):
-    for i in range(len(columns)):
+def printMin(numerical_columns, line):
+    for i in range(len(numerical_columns)):
         mini = float("inf")
-        for element in columns[i]:
+        for element in numerical_columns[i]:
             if(element < mini):
                 mini = element
         line += str(f"{mini:.6f}").ljust(spacing)
     return line
 
-def printQuarter(line):
-    for i in range(len(columns)):
-        index = 0.25 * (count[i] - 1) + 1
+def printQuarter(numerical_columns, line):
+    for i in range(len(numerical_columns)):
+        index = 0.25 * (calculateCount(numerical_columns[i]) - 1) + 1
         ri = int(index)
         rf = index - ri
-        xri = columns[i][ri - 1]
-        result = xri + rf * (columns[i][ri] - xri)
+        xri = numerical_columns[i][ri - 1]
+        result = xri + rf * (numerical_columns[i][ri] - xri)
         line += str(f"{result:.6f}").ljust(spacing)
     return line
 
-def printHalf(line):
-    for i in range(len(columns)):
-        index = 0.50 * (count[i] - 1) + 1
+def printHalf(numerical_columns, line):
+    for i in range(len(numerical_columns)):
+        index = 0.50 * (calculateCount(numerical_columns[i]) - 1) + 1
         ri = int(index)
         rf = index - ri
-        xri = columns[i][ri - 1]
-        result = xri + rf * (columns[i][ri] - xri)
+        xri = numerical_columns[i][ri - 1]
+        result = xri + rf * (numerical_columns[i][ri] - xri)
         line += str(f"{result:.6f}").ljust(spacing)
     return line
 
-def printQuarterx3(line):
-    for i in range(len(columns)):
-        index = 0.75 * (count[i] - 1) + 1
+def printQuarterx3(numerical_columns, line):
+    for i in range(len(numerical_columns)):
+        index = 0.75 * (calculateCount(numerical_columns[i]) - 1) + 1
         ri = int(index)
         rf = index - ri
-        xri = columns[i][ri - 1]
-        result = xri + rf * (columns[i][ri] - xri)
+        xri = numerical_columns[i][ri - 1]
+        result = xri + rf * (numerical_columns[i][ri] - xri)
         line += str(f"{result:.6f}").ljust(spacing)
     return line
 
-def printMax(line):
-    for i in range(len(columns)):
+def printMax(numerical_columns, line):
+    for i in range(len(numerical_columns)):
         mini = float("-inf")
-        for element in columns[i]:
+        for element in numerical_columns[i]:
             if(element > mini):
                 mini = element
         line += str(f"{mini:.6f}").ljust(spacing)
@@ -140,7 +154,7 @@ def printData(data):
         'Max':    printMax
     }
     for element in describe:
-        line = describe[element](element.ljust(10))
+        line = describe[element](data, element.ljust(10))
         print(line)
 
 def	main():
@@ -148,8 +162,8 @@ def	main():
         print("Enter database name")
         exit(1)
     dataset = sys.argv[1]
-    getData(dataset)
-    printData(columns)
+    numerical_columns, _ = getData(dataset)
+    printData(numerical_columns)
 
 if __name__ == "__main__":
 	main()
