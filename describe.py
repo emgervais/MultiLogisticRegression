@@ -1,5 +1,6 @@
 import sys
 import math
+import numpy as np
 spacing = 30
 def getData(name):
     # name = 'datasets/test.csv'
@@ -19,6 +20,21 @@ def sort(array):
                 array[j], array[j+1] = array[j+1], array[j]
     return array
 
+def arrayToFloat(array):
+    converted_array = []
+    for line in array:
+        temp_array = []
+        for element in line:
+            value = element
+            try:
+                value = float(value)
+            except:
+                if not value:
+                    value = np.nan
+            temp_array.append(value)
+        converted_array.append(temp_array)
+    return converted_array
+
 def parse(content):
     lines = content.strip().split('\n')
     array = [line.split(',') for line in lines]
@@ -37,6 +53,7 @@ def parse(content):
                 temp_array.append(float(element[i]))
         if not remove_column and empty_count != len(array) - 1:
             numerical_columns.append(temp_array)
+    array = arrayToFloat(array)
     return numerical_columns, array
 
 
