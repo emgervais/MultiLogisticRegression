@@ -1,6 +1,7 @@
 import sys
 import math
 import numpy as np
+import csv
 spacing = 30
 def getData(name):
     # name = 'datasets/test.csv'
@@ -32,12 +33,21 @@ def arrayToFloat(array):
                 if not value:
                     value = np.nan
             temp_array.append(value)
-        converted_array.append(temp_array)
-    return converted_array
+        converted_array.append(np.array(temp_array))
+    return np.array(converted_array)
+
+def extractTruth(array):
+    joined_rows = [','.join(map(str, row)) for row in array]
+    
+    with open('truth.csv', 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
+        for row in joined_rows:
+            csv_writer.writerow([row])
 
 def parse(content):
     lines = content.strip().split('\n')
     array = [line.split(',') for line in lines]
+    # extractTruth(np.array(array)[:, :2])
     removeColumn(0, array)
     numerical_columns = []
     for i in range(len(array[0])):
@@ -86,10 +96,11 @@ def printCount(numerical_columns, line):
     return line
 
 def calculateMean(data):
-    total = float(0)
+    total = np.float64(0)
+    data = np.array(data)
     for element in data:
-        if(element):
-            total += element
+        if(element and not np.isnan(np.float64(element))):
+            total += np.float64(element)
     return total / calculateCount(data)
 
 def printMean(numerical_columns, line):
@@ -149,12 +160,23 @@ def printQuarterx3(numerical_columns, line):
         line += str(f"{result:.6f}").ljust(spacing)
     return line
 
+def calculateMax(column):
+    mini = float("-inf")
+    for element in column:
+        if(element > mini):
+            mini = element
+    return mini
+
+def calculateMin(column):
+    mini = float("inf")
+    for element in column:
+        if(element < mini):
+            mini = element
+    return mini
+
 def printMax(numerical_columns, line):
     for i in range(len(numerical_columns)):
-        mini = float("-inf")
-        for element in numerical_columns[i]:
-            if(element > mini):
-                mini = element
+        mini = calculateMax(numerical_columns[i])
         line += str(f"{mini:.6f}").ljust(spacing)
     return line
 

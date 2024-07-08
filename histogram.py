@@ -17,11 +17,12 @@ def sortHouse(array):
         if house_name not in sort_array:
             sort_array[house_name] = []
         sort_array[house_name].append(line)
-    sort_array = list(sort_array.values())
-    return sort_array
+    houses_name = list(sort_array.keys())
+    sort_array = [np.array(value) for value in sort_array.values()]
+    return sort_array, houses_name
 
-def plotData(array, numerical_columns, data):
-    histo = [np.array(array[0], dtype=object), np.array(array[1], dtype=object), np.array(array[2], dtype=object), np.array(array[3], dtype=object)]
+def plotData(histo, numerical_columns, data, houses_name):
+    # histo = [np.array(array[0], dtype=object), np.array(array[1], dtype=object), np.array(array[2], dtype=object), np.array(array[3], dtype=object)]
     color = ['red', 'yellow', 'green', 'blue']
     i = 0
     for house in histo:
@@ -34,6 +35,7 @@ def plotData(array, numerical_columns, data):
     plt.xlabel('grade')
     plt.ylabel('amount of students')
     plt.title('Histogram of homogeneous score distribution')
+    plt.legend(houses_name)
     plt.show()
 
 def	main():
@@ -42,8 +44,8 @@ def	main():
         exit(1)
     dataset = sys.argv[1]
     numerical_columns, array = getData(dataset)
-    byHouse = sortHouse(array)
-    plotData(byHouse, numerical_columns, array)
+    byHouse, houses_name = sortHouse(array)
+    plotData(byHouse, numerical_columns, array, houses_name)
 
 if __name__ == "__main__":
 	main()

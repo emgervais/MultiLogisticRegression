@@ -47,10 +47,11 @@ def scatter_all_plot(dataByHouse, index, numerical):
         i += 1
     plt.show()
 
-def scatter_one_plot(dataByHouse, index):
+def scatter_one_plot(dataByHouse, index, houses_name):
     Xindex = findIndex(index, 'Defense Against the Dark Arts')
     Yindex = findIndex(index, 'Astronomy')
     plot(Xindex, Yindex, index[0][Xindex], index[0][Yindex], dataByHouse)
+    plt.legend(houses_name)
     plt.show()
 
 def	main():
@@ -58,9 +59,9 @@ def	main():
         print("Enter database name")
         exit(1)
     numerical, data = getData(sys.argv[1])
-    dataByHouse = sortHouse(data)
+    dataByHouse, houses_name = sortHouse(data)
     # scatter_all_plot(dataByHouse, data, numerical)
-    scatter_one_plot(dataByHouse, data)
+    scatter_one_plot(dataByHouse, data, houses_name)
 
 
 if __name__ == "__main__":

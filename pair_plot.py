@@ -42,7 +42,7 @@ def histogram(xIndex, dataByHouse, ax):
         ax.hist(house, color=color[i], alpha=0.5)
         i += 1
 
-def all_plot(dataByHouse, index, numerical):
+def all_plot(dataByHouse, index, numerical, legend):
     size = len(numerical)
     _, ax= plt.subplots(nrows=size, ncols=size)
     plt.subplots_adjust(wspace=0.20, hspace=0.20)
@@ -66,7 +66,7 @@ def all_plot(dataByHouse, index, numerical):
 
             ax[y, x].spines['right'].set_visible(False)
             ax[y, x].spines['top'].set_visible(False)
-
+    plt.legend(legend, loc='center left', bbox_to_anchor=(1, 0.5))
     plt.show()
 
 
@@ -75,8 +75,8 @@ def	main():
         print("Enter database name")
         exit(1)
     numerical, data = getData(sys.argv[1])
-    dataByHouse = sortHouse(data)
-    all_plot(dataByHouse, data, numerical)
+    dataByHouse, legend = sortHouse(data)
+    all_plot(dataByHouse, data, numerical, legend)
 
 
 if __name__ == "__main__":
