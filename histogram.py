@@ -21,31 +21,30 @@ def sortHouse(array):
     sort_array = [np.array(value) for value in sort_array.values()]
     return sort_array, houses_name
 
-def plotData(histo, numerical_columns, data, houses_name):
-    # histo = [np.array(array[0], dtype=object), np.array(array[1], dtype=object), np.array(array[2], dtype=object), np.array(array[3], dtype=object)]
+def plot_histogram(array, houses, x, pl=plt):
     color = ['red', 'yellow', 'green', 'blue']
-    i = 0
-    for house in histo:
-        house = house[:, 15]
-        house = np.array([float(x) if x not in [None, ''] else np.nan for x in house], dtype=float)
-        house = house[~np.isnan(house)]
-        plt.hist(house, color=color[i], alpha=0.5)
-        i+=1
+    change_indices = np.where(houses[:-1] != houses[1:])[0] + 1
+    change_indices = np.concatenate(([0], change_indices, [len(array)]))
+    for i in range(len(change_indices) - 1):
+        house = array[change_indices[i]:change_indices[i + 1] , x]
+        house = np.array(house, dtype=np.float64)
+        pl.hist(house, color=color[i], alpha=0.5)
 
-    plt.xlabel('grade')
-    plt.ylabel('amount of students')
-    plt.title('Histogram of homogeneous score distribution')
-    plt.legend(houses_name)
-    plt.show()
 
 def	main():
     if(len(sys.argv) != 2):
         print("Enter database name")
         exit(1)
-    dataset = sys.argv[1]
-    numerical_columns, array = getData(dataset)
-    byHouse, houses_name = sortHouse(array)
-    plotData(byHouse, numerical_columns, array, houses_name)
+    array = getData(sys.argv[1])
+    array = array[1:]
+    sorted_index = np.argsort(array[:, 0], axis=0)
+    byHouse = array[sorted_index]
+    plot_histogram(byHouse, byHouse[:,0], 15)
+    plt.xlabel('grade')
+    plt.ylabel('amount of students')
+    plt.title('Care of Magical Creatures')
+    plt.legend(np.unique(array[:, 0]))
+    plt.show()
 
 if __name__ == "__main__":
 	main()

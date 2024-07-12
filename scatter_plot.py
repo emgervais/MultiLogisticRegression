@@ -1,67 +1,41 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib
 import sys
 from describe import getData
-from histogram import sortHouse, findIndex
 
-def plot(xIndex, yIndex, xLabel, YLabel, dataByHouse):
-    house = [np.array(dataByHouse[0], dtype=object), 
-             np.array(dataByHouse[1], dtype=object), 
-             np.array(dataByHouse[2], dtype=object), 
-             np.array(dataByHouse[3], dtype=object)]
+def plot(data, index, pl, x, y, s):
     color = ['red', 'yellow', 'green', 'blue']
     i = 0
 
-    plt.figure()
-    plt.xlabel(xLabel)
-    plt.ylabel(YLabel)
-    for element in house:
-        x = element[:, xIndex]
-        y = element[:, yIndex]
-
-        x = np.array([float(a) if a not in [None, ''] else np.nan for a in x], dtype=float)
-        y = np.array([float(a) if a not in [None, ''] else np.nan for a in y], dtype=float)
-
-        valid_mask = ~np.isnan(x) & ~np.isnan(y)
-
-        x = x[valid_mask]
-        y = y[valid_mask]
-
-        plt.scatter(x, y, color=color[i], alpha=0.5)
-        plt.title(f'House Grades')
+    for i in range(len(index) - 1):
+        housex = data[index[i]:index[i + 1] , x]
+        housex = np.array(housex, dtype=np.float64)
+        housey = data[index[i]:index[i + 1] , y]
+        housey = np.array(housey, dtype=np.float64)
+        pl.scatter(housex, housey, s, color=color[i], alpha=0.5)
         i += 1
 
-def scatter_all_plot(dataByHouse, index, numerical):
-    i = 0
-    while i < len(numerical):
-        j = 0
-        indexX = findIndex(index, numerical[i][0])
-        while j < len(numerical):
-            if(j == i):
-                j+=1
-                continue
-            indexY = findIndex(index, numerical[j][0])
-            plot(indexX, indexY, numerical[i][0], numerical[j][0], dataByHouse)
-            j += 1
-        i += 1
-    plt.show()
-
-def scatter_one_plot(dataByHouse, index, houses_name):
-    Xindex = findIndex(index, 'Defense Against the Dark Arts')
-    Yindex = findIndex(index, 'Astronomy')
-    plot(Xindex, Yindex, index[0][Xindex], index[0][Yindex], dataByHouse)
-    plt.legend(houses_name)
-    plt.show()
+def scatter_one_plot(data, houses, x, y, pl=plt, s=20):
+    change_indices = np.where(houses[:-1] != houses[1:])[0] + 1
+    change_indices = np.concatenate(([0], change_indices, [len(data)]))
+    plot(data, change_indices, pl, x, y, s)
 
 def	main():
     if(len(sys.argv) != 2):
         print("Enter database name")
         exit(1)
-    numerical, data = getData(sys.argv[1])
-    dataByHouse, houses_name = sortHouse(data)
-    # scatter_all_plot(dataByHouse, data, numerical)
-    scatter_one_plot(dataByHouse, data, houses_name)
+    np.set_printoptions(threshold=np.inf)
+    array = getData(sys.argv[1])
+    array = array[1:]
+    sorted_index = np.argsort(array[:, 0], axis=0)
+    byHouse = array[sorted_index]
+    plt.figure()
+    scatter_one_plot(byHouse, byHouse[:, 0], 6, 8)
+    plt.title(f'House Grades')
+    plt.xlabel("Astronomy")
+    plt.ylabel("Defense Against the dark Art")
+    plt.legend(np.unique(byHouse[:, 0]))
+    plt.show()
 
 
 if __name__ == "__main__":
