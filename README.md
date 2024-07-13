@@ -1,5 +1,4 @@
-
-    <h1>Data Science Project: Logistic Regression</h1>
+<h1>Data Science Project: Logistic Regression</h1>
     
     <h2>Overview</h2>
     <p>This project aims to implement a logistic regression model using gradient descent for multi-class classification. The project is divided into several parts: data analysis, data visualization, and logistic regression. Each part includes specific tasks to explore, visualize, and model the data without using pre-built functions that simplify the process.</p>
