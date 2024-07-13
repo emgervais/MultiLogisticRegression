@@ -1,4 +1,4 @@
-<body>
+
     <h1>Data Science Project: Logistic Regression</h1>
     
     <h2>Overview</h2>
@@ -70,4 +70,3 @@ Max        7.900000   4.400000   6.900000   2.500000
     
     <h2 id="license">License</h2>
     <p>This project is licensed under the MIT License - see the <a href="LICENSE">LICENSE</a> file for details.</p
-</body>
