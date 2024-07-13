@@ -11,7 +11,7 @@ def main():
     np.set_printoptions(threshold=np.inf)
     df = pd.read_csv(sys.argv[1])
     df2 = pd.read_csv(sys.argv[2])
-    df = df.dropna(subset=['Defense Against the Dark Arts', 'Charms', 'Herbology', 'Divination', 'Muggle Studies'])
+    df = df.fillna(method='ffill')
     X = np.array(df[['Defense Against the Dark Arts', 'Charms', 'Herbology', 'Divination', 'Muggle Studies']], dtype=float)
     X_val_std = StandardScaler(X)
     house = list(df2)[:4]

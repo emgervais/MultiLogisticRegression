@@ -41,7 +41,6 @@ def net_input(w, X):
 def predict(w, X, houses):
     X = np.insert(X, 0, 1, axis=1)
     predictions = net_input(w, X).T
-    print(predictions)
     return [houses[x] for x in predictions.argmax(1)]
 
 def sigmoid(z):
