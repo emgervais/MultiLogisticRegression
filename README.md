@@ -58,10 +58,10 @@ Max        7.900000   4.400000   6.900000   2.500000
 <h2 id="setup-and-usage">Setup and Usage</h2>
 <ol>
     <li>Clone the repository:
-            <pre>git clone https://github.com/yourusername/your-repo-name.git</pre>
+            <pre>git clone https://github.com/emgervais/MultiLogisticRegression.git</pre>
     </li>
     <li>Navigate to the project directory:
-        <pre>cd your-repo-name</pre>
+        <pre>cd MultiLogisticRegression</pre>
     </li>
     <li>run the ./script to install all requirements then actiavte you virtual environement</li>
     <li>Follow the instructions in each section to run the scripts for data analysis, visualization, and logistic regression.</li>
